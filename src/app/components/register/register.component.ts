@@ -16,6 +16,7 @@ export class RegisterComponent {
 
 
   authForm: FormGroup;
+  errorMessage: string | null = null;
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
 
@@ -83,6 +84,8 @@ export class RegisterComponent {
       };
 
       console.log("REGISTER :", registerData);
+      this.errorMessage = null; // On réinitialise l'erreur avant de lancer l'appel
+
       this.authService.register(registerData).subscribe({
         next: () => {
           console.log("Login success");
@@ -90,6 +93,14 @@ export class RegisterComponent {
         },
         error: (err) => {
           console.error("Erreur login", err);
+
+          // On récupère le message renvoyé par Spring Boot (Response Body)
+          // Si c'est du texte brut, c'est err.error
+          if (err.error && typeof err.error === 'string') {
+            this.errorMessage = err.error;
+          } else {
+            this.errorMessage = "Une erreur est survenue lors de l'inscription.";
+          }
         }
       });
   }

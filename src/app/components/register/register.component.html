@@ -6,6 +6,10 @@
        Inscription
     </h2>
 
+    <div *ngIf="errorMessage" class="backend-error">
+      {{ errorMessage }}
+    </div>
+
     <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
 
       <!-- EMAIL -->

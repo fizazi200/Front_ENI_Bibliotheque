@@ -1,22 +1,22 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
+
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
-export class LoginComponent {
+export class RegisterComponent {
 
-  isLoginMode = signal(true);
 
   authForm: FormGroup;
 
-  constructor(private fb: FormBuilder,  private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router) {
 
     this.authForm = this.fb.group({
 
@@ -38,18 +38,15 @@ export class LoginComponent {
     this.updateValidators();
   }
 
-  toggleMode() {
-    this.router.navigate(['/register']);
+  redirectToConnexion() {
+    this.router.navigate(['/login']);
   }
 
   private updateValidators() {
 
-    const isLogin = this.isLoginMode();
 
     const nom = this.authForm.get('nom');
     const prenom = this.authForm.get('prenom');
-
-    if (!isLogin) {
 
       nom?.setValidators([
         Validators.required,
@@ -66,17 +63,7 @@ export class LoginComponent {
       nom?.enable();
       prenom?.enable();
 
-    } else {
 
-      nom?.clearValidators();
-      prenom?.clearValidators();
-
-      nom?.setValue('');
-      prenom?.setValue('');
-
-      nom?.disable();
-      prenom?.disable();
-    }
 
     nom?.updateValueAndValidity();
     prenom?.updateValueAndValidity();
@@ -86,16 +73,6 @@ export class LoginComponent {
 
     if (this.authForm.invalid) return;
 
-    if (this.isLoginMode()) {
-
-      const loginData = {
-        email: this.authForm.value.email,
-        password: this.authForm.value.password
-      };
-
-      console.log("LOGIN :", loginData);
-
-    } else {
 
       const registerData = {
         nom: this.authForm.value.nom,
@@ -105,7 +82,6 @@ export class LoginComponent {
       };
 
       console.log("REGISTER :", registerData);
-    }
 
     // 👉 appel backend Spring Boot ici
   }

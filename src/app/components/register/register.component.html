@@ -2,7 +2,9 @@
 
   <div class="auth-box">
 
-    <h2> Connexion  </h2>
+    <h2>
+       Inscription
+    </h2>
 
     <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
 
@@ -41,13 +43,41 @@
         </small>
       </div>
 
+      <!-- NOM -->
+      <div class="form-group" >
+        <input class="form-control"
+               placeholder="Nom"
+               formControlName="nom">
+
+        <small *ngIf="authForm.get('nom')?.errors?.['required']">
+          Nom obligatoire
+        </small>
+
+        <small *ngIf="authForm.get('nom')?.errors?.['pattern']">
+          Nom invalide
+        </small>
+      </div>
+
+      <!-- PRENOM -->
+      <div class="form-group" >
+        <input class="form-control"
+               placeholder="Prénom"
+               formControlName="prenom">
+
+        <small *ngIf="authForm.get('prenom')?.errors?.['required']">
+          Prénom obligatoire
+        </small>
+
+        <small *ngIf="authForm.get('prenom')?.errors?.['pattern']">
+          Prénom invalide
+        </small>
+      </div>
+
       <!-- BUTTON -->
-      <button type="submit" [disabled]="authForm.invalid"> Se connecter </button>
+      <button type="submit" [disabled]="authForm.invalid">  S'inscrire  </button>
 
     </form>
-
-    <!-- SWITCH -->
-    <button class="btn-link" (click)="toggleMode()"> Créer un compte </button>
+    <button class="btn-link" (click)="redirectToConnexion()"> Connexion </button>
 
   </div>
 

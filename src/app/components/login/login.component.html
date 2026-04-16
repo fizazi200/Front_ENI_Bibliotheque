@@ -1,1 +1,90 @@
-<p>login works!</p>
+<div class="auth-container">
+
+  <div class="auth-box">
+
+    <h2>
+      {{ isLoginMode() ? 'Connexion' : 'Inscription' }}
+    </h2>
+
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+
+      <!-- EMAIL -->
+      <div class="form-group">
+        <input class="form-control"
+               placeholder="Email"
+               formControlName="email">
+
+        <small *ngIf="authForm.get('email')?.touched && authForm.get('email')?.errors?.['required']">
+          Email obligatoire
+        </small>
+
+        <small *ngIf="authForm.get('email')?.errors?.['email']">
+          Email invalide
+        </small>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="form-group">
+        <input class="form-control"
+               type="password"
+               placeholder="Mot de passe"
+               formControlName="password">
+
+        <small *ngIf="authForm.get('password')?.touched && authForm.get('password')?.errors?.['required']">
+          Mot de passe obligatoire
+        </small>
+
+        <small *ngIf="authForm.get('password')?.errors?.['minlength']">
+          Minimum 8 caractères
+        </small>
+
+        <small *ngIf="authForm.get('password')?.errors?.['pattern']">
+          Majuscule + minuscule + chiffre requis
+        </small>
+      </div>
+
+      <!-- NOM -->
+      <div class="form-group" *ngIf="!isLoginMode()">
+        <input class="form-control"
+               placeholder="Nom"
+               formControlName="nom">
+
+        <small *ngIf="authForm.get('nom')?.errors?.['required']">
+          Nom obligatoire
+        </small>
+
+        <small *ngIf="authForm.get('nom')?.errors?.['pattern']">
+          Nom invalide
+        </small>
+      </div>
+
+      <!-- PRENOM -->
+      <div class="form-group" *ngIf="!isLoginMode()">
+        <input class="form-control"
+               placeholder="Prénom"
+               formControlName="prenom">
+
+        <small *ngIf="authForm.get('prenom')?.errors?.['required']">
+          Prénom obligatoire
+        </small>
+
+        <small *ngIf="authForm.get('prenom')?.errors?.['pattern']">
+          Prénom invalide
+        </small>
+      </div>
+
+      <!-- BUTTON -->
+      <button type="submit" [disabled]="authForm.invalid">
+        {{ isLoginMode() ? 'Se connecter' : 'S\'inscrire' }}
+      </button>
+
+    </form>
+
+    <!-- SWITCH -->
+    <button class="btn-link" (click)="toggleMode()">
+      {{ isLoginMode() ? 'Créer un compte' : 'Déjà un compte ?' }}
+    </button>
+
+  </div>
+
+</div>

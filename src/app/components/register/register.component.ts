@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import {Router} from '@angular/router';
+import {AuthService} from '../../services/auth.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class RegisterComponent {
 
   authForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
 
     this.authForm = this.fb.group({
 
@@ -82,7 +83,16 @@ export class RegisterComponent {
       };
 
       console.log("REGISTER :", registerData);
-
-    // 👉 appel backend Spring Boot ici
+      this.authService.register(registerData).subscribe({
+        next: () => {
+          console.log("Login success");
+           alert("Login success");
+        },
+        error: (err) => {
+          console.error("Erreur login", err);
+        }
+      });
   }
+    // 👉 appel backend Spring Boot ici
+
 }

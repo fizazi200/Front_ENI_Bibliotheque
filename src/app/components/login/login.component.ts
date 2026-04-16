@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent {
 
   authForm: FormGroup;
 
-  constructor(private fb: FormBuilder,  private router: Router) {
+  constructor(private fb: FormBuilder,  private router: Router, private authService: AuthService ) {
 
     this.authForm = this.fb.group({
 

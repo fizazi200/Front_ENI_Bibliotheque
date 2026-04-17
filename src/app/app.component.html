@@ -1,3 +1,11 @@
+@if (authService.isLoggedIn()) {
+  <app-nav-bar></app-nav-bar>
+}
 
+<main [style.padding]="authService.isLoggedIn() ? '20px' : '0'">
+  <router-outlet></router-outlet>
+</main>
 
-<router-outlet></router-outlet>
+@if (authService.isLoggedIn()) {
+  <app-footer-bar></app-footer-bar>
+}

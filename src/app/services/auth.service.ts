@@ -1,22 +1,38 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
 import { Observable, tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   private API_URL = 'http://localhost:8080/api/auth';
+  
+  // On injecte HttpClient et l'ID de la plateforme
+  private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
+  
 
-  constructor(private http: HttpClient) {}
+  // Informations USER
+  getCurrentUser() {
+  const token = localStorage.getItem('token_session');
+  return this.http.get('http://localhost:8080/api/auth/me', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
 
   // 🔐 LOGIN
   login(data: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.API_URL}/login`, data).pipe(
       tap((response: any) => {
-        // supposons que backend retourne { token: 'xxx' }
-        localStorage.setItem('token_session', response.token);
+        // On ne stocke le token que si on est dans le navigateur
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('token_session', response.token);
+        }
       })
     );
   }
@@ -33,16 +49,24 @@ export class AuthService {
 
   // 🔍 CHECK LOGIN
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token_session');
+    if (isPlatformBrowser(this.platformId)) {
+      return !!localStorage.getItem('token_session');
+    }
+    return false; // Côté serveur, on fait comme si on n'était pas connecté
   }
 
   // 🚪 LOGOUT
   logout() {
-    localStorage.removeItem('token_session');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('token_session');
+    }
   }
 
   // 🔑 GET TOKEN
   getToken(): string | null {
-    return localStorage.getItem('token_session');
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('token_session');
+    }
+    return null;
   }
 }

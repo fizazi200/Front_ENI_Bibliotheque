@@ -11,6 +11,6 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // 🔥 redirection propre Angular
+  // Redirection propre Angular
   return router.createUrlTree(['/login']);
 };

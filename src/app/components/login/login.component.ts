@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {AuthService} from '../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent {
 
   authForm: FormGroup;
 
-  constructor(private fb: FormBuilder,  private router: Router, private authService: AuthService ) {
+  constructor(private fb: FormBuilder,  private router: Router, private authService: AuthService, private toastr: ToastrService) {
 
     this.authForm = this.fb.group({
 
@@ -94,9 +95,10 @@ export class LoginComponent {
       };
 
       this.authService.login(loginData).subscribe({
-        next: () => {
-          console.log("Login success");
-          alert("Login success");
+        next: (res) => {
+          console.log("SUCCESS:", res);
+          this.toastr.success(res.message || "Connexion réussie ✅");
+          this.router.navigate(['/homepage']);
         },
         error: (err) => {
           console.error("Erreur login", err);

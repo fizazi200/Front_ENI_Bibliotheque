@@ -1,0 +1,24 @@
+<nav class="navbar">
+  <div class="logo" routerLink="/homepage">Bookhub</div>
+  
+  <ul class="nav-links">
+    <li><a routerLink="/homepage" routerLinkActive="active">Accueil</a></li>
+  </ul>
+
+  <div class="user-menu">
+    <button class="user-btn">
+      @if (user) {
+      <div class="user">
+        <span class="user-icon">👤</span>
+            Bonjour {{ user.nom }}{{ user.prenom }}
+        </div>
+      }
+           
+    </button>
+    <div class="dropdown-content">
+      <a routerLink="/profile">Mon Profil</a>
+      <hr>
+      <a (click)="logout()" class="logout-link">Déconnexion</a>
+    </div>
+  </div>
+</nav>

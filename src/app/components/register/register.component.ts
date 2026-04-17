@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +18,7 @@ export class RegisterComponent {
   authForm: FormGroup;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private toastr: ToastrService) {
 
     this.authForm = this.fb.group({
 
@@ -87,12 +87,14 @@ export class RegisterComponent {
       this.errorMessage = null; // On réinitialise l'erreur avant de lancer l'appel
 
       this.authService.register(registerData).subscribe({
-        next: () => {
-          console.log("Login success");
-           alert("Login success");
+        next: (res)  => {
+          console.log("SUCCESS:", res);
+          this.toastr.success(res.message || "Inscription réussie ✅");
+          this.router.navigate(['/login']);
         },
         error: (err) => {
-          console.error("Erreur login", err);
+          console.error("Erreur Inscription", err);
+          this.toastr.error(err.error?.message || "Erreur d'inscription", 'Échec');
 
           // On récupère le message renvoyé par Spring Boot (Response Body)
           // Si c'est du texte brut, c'est err.error

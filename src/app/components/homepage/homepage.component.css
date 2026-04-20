@@ -1,0 +1,323 @@
+/* --- Container principal --- */
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Section Bienvenue (Hero) --- */
+.hero {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin-bottom: 2rem;
+}
+
+.btn-explorer {
+    background-color: white;
+    color: #2c3e50;
+    border: 2px solid #2c3e50;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-explorer:hover {
+    background-color: #2c3e50;
+    color: white;
+}
+
+/* --- Séparateur --- */
+.separator {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 2rem 0;
+}
+
+/* --- Section Recherche et Filtres --- */
+.search-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.filter-wrapper {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    max-width: 1000px;
+    justify-content: center;
+    align-items: stretch; /* Aligne la hauteur de tous les éléments */
+    flex-wrap: wrap;
+}
+
+/* Barre de recherche */
+.search-bar {
+    display: flex;
+    flex: 2;
+    min-width: 300px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid #ddd;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 1rem;
+}
+
+.btn-search {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 0 1.5rem;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Menu Multi-Catégories (Custom Dropdown) */
+.custom-dropdown {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    user-select: none;
+}
+
+.dropdown-header {
+    padding: 0 1.2rem; /* 0 en haut/bas, 1.2rem à gauche/droite pour l'alignement */
+    display: flex;
+    justify-content: space-between; /* Texte à gauche, flèche à droite */
+    align-items: center; /* Centrage vertical mathématique */
+    height: 100%; /* Important pour occuper toute la hauteur de la case */
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    line-height: 1; /* Supprime l'espace inutile sous les lettres */
+}
+
+.arrow {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+    color: #7f8c8d;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    z-index: 1000;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    max-height: 250px;
+    overflow-y: auto;
+    border-radius: 0 0 4px 4px;
+}
+
+.custom-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.custom-dropdown:hover .arrow {
+    transform: rotate(180deg);
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    padding: 0.7rem 1.2rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.checkbox-item:hover {
+    background-color: #f8f9fa;
+}
+
+.checkbox-item input {
+    margin-right: 12px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Filtre Statut (Select) */
+.filter-select {
+    flex: 1;
+    min-width: 180px;
+    padding: 0 1.2rem; /* Aligné sur le dropdown-header */
+    height: 100%; /* S'assure qu'il fait la même taille */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    color: #2c3e50;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    
+    /* --- On retire la flèche par défaut --- */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* --- On ajoute la flèche personnalisée (le triangle ▼) --- */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237f8c8d'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.2rem center; /* Placée à droite, centrée verticalement */
+    background-size: 1.5rem; /* Taille de la flèche */
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* --- Grille de Livres --- */
+.grid-header {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.book-card {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    text-align: center;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.book-image {
+    height: 250px;
+    background-color: #f0f0f0;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.book-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-img {
+    font-size: 3rem;
+    color: #bdc3c7;
+}
+
+.book-info h3 {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+    color: #2c3e50;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.author {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.status {
+    margin-bottom: 1rem;
+}
+
+.badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.available {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.unavailable {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.btn-details {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: transparent;
+    border: 1px solid #3498db;
+    color: #3498db;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-details:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.no-data {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #95a5a6;
+}
+
+/* --- Media Query pour Mobile --- */
+@media (max-width: 768px) {
+    .filter-wrapper {
+        flex-direction: column;
+    }
+    
+    .search-bar, .custom-dropdown, .filter-select {
+        width: 100%;
+        flex: none;
+    }
+
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+    }
+}

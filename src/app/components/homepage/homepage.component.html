@@ -1,1 +1,87 @@
-<p>homepage works!</p>
+<div class="home-container">
+  
+  <section class="hero">
+    <h1>Bienvenue sur BookHub</h1>
+    <p>Découvrez et empruntez vos livres facilement</p>
+    <button class="btn-explorer" routerLink="/livres">Explorer les livres</button>
+  </section>
+
+  <hr class="separator">
+
+  <section class="search-section">
+    <div class="filter-wrapper">
+      
+      <div class="search-bar">
+        <input type="text" 
+               #recherche
+               placeholder="Rechercher un livre (titre, auteur, ISBN)" 
+               (input)="onSearch($event)">
+        <button class="btn-search">🔍</button>
+      </div>
+
+      <div class="custom-dropdown">
+        <div class="dropdown-header">
+          <span>Catégories {{ selectedCategories.length > 0 ? '(' + selectedCategories.length + ')' : '' }}</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="dropdown-content">
+          @for (cat of categoriesDisponibles; track cat) {
+            <label class="checkbox-item">
+              <input type="checkbox" 
+                     [checked]="selectedCategories.includes(cat)"
+                     (change)="onCategoryToggle($event, cat)">
+              <span class="checkbox-text">{{ cat }}</span>
+            </label>
+          }
+        </div>
+      </div>
+
+      <select class="filter-select" (change)="onFilterChange($event, 'status')">
+        <option value="all">Tous les statuts</option>
+        <option value="available">Disponible</option>
+        <option value="unavailable">Indisponible</option>
+      </select>
+
+    </div>
+  </section>
+
+  <div class="grid-header">
+    <h2 style="margin-bottom: 1.5rem; color: #2c3e50; font-size: 1.5rem;">
+      {{ recherche.value.length > 2 || selectedCategories.length > 0 || selectedStatus !== 'all' ? 'Résultats de la recherche' : 'Suggestions du jour' }}
+    </h2>
+  </div>
+
+  <section class="books-grid">
+    @for (livre of livres; track livre.id) {
+      <div class="book-card">
+        <div class="book-image">
+          @if (livre.coverUrl) {
+            <img [src]="livre.coverUrl" [alt]="livre.title" (error)="livre.coverUrl = 'assets/images/default-book.png'">
+          } @else {
+            <div class="placeholder-img">📚<br>Image</div>
+          }
+        </div>
+
+        <div class="book-info">
+          <h3>{{ livre.title | uppercase }}</h3>
+          <p class="author">Par {{ livre.author | titlecase }}</p>
+          
+          <div class="status">
+            <span class="badge" [ngClass]="livre.availableCopies > 0 ? 'available' : 'unavailable'">
+              {{ livre.availableCopies > 0 ? livre.availableCopies + ' disponible(s)' : 'Indisponible' }}
+            </span>
+          </div>
+
+          <button class="btn-details" [routerLink]="['/livre', livre.id]">
+            Voir détails
+          </button>
+        </div>
+      </div>
+    } @empty {
+      <div class="no-data">
+        <p>Aucun livre ne correspond à vos critères.</p>
+      </div>
+    }
+  </section>
+
+</div>

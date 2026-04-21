@@ -1,1 +1,36 @@
-<p>liste-livres works!</p>
+<section class="books-grid">
+  @for (livre of livres; track livre.id) {
+    <div class="book-card">
+      <div class="book-image">
+        @if (livre.coverUrl) {
+          <img [src]="livre.coverUrl" [alt]="livre.title"
+               (error)="livre.coverUrl = 'assets/images/default-book.png'">
+        } @else {
+          <div class="placeholder-img">📚<br>Image</div>
+        }
+      </div>
+
+      <div class="book-info">
+        <h3>{{ livre.title | uppercase }}</h3>
+        <p class="author">Par {{ livre.author | titlecase }}</p>
+
+        <div class="status">
+                    <span class="badge" [ngClass]="livre.availableCopies > 0 ? 'available' : 'unavailable'">
+                        {{ livre.availableCopies > 0 ? livre.availableCopies + ' disponible(s)' : 'Indisponible' }}
+                    </span>
+        </div>
+
+        <button class="btn-details" [routerLink]="['/livre', livre.id]">
+          Voir détails
+        </button>
+      </div>
+    </div>
+  } @empty {
+    <div class="no-data">
+      <p>Aucun livre ne correspond à votre recherche.</p>
+      <button class="btn-explorer" style="margin-top: 1rem;" >Réinitialiser les
+        filtres
+      </button>
+    </div>
+  }
+</section>

@@ -1,0 +1,60 @@
+<div class="catalogue-container">
+
+  <header class="catalogue-header">
+    <h1>Catalogue des livres</h1>
+    <p>Explorez notre collection complète et trouvez votre prochaine lecture</p>
+  </header>
+
+  <section class="search-section">
+    <div class="filter-wrapper">
+
+      <div class="search-bar">
+        <input type="text" #recherche [value]="currentKeyword"
+               placeholder="Rechercher par titre, auteur, ISBN..." (input)="onSearch($event)">
+        <button class="btn-search">🔍</button>
+      </div>
+
+      <div class="custom-dropdown">
+        <div class="dropdown-header">
+                    <span>Catégories {{
+                        selectedCategories.length > 0 ? '(' + selectedCategories.length + ')' : ''
+                      }}</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="dropdown-content">
+          @for (cat of categoriesDisponibles; track cat) {
+            <label class="checkbox-item">
+              <input type="checkbox" [checked]="selectedCategories.includes(cat)"
+                     (change)="onCategoryToggle($event, cat)">
+              <span class="checkbox-text">{{ cat }}</span>
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="select-wrapper">
+        <select class="filter-select" (change)="onFilterChange($event, 'status')">
+          <option value="all">Tous les statuts</option>
+          <option value="available">Disponible</option>
+          <option value="unavailable">Indisponible</option>
+        </select>
+        <span class="arrow">▼</span>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="grid-header">
+    <h2 style="margin-bottom: 1.5rem; color: #2c3e50; font-size: 1.3rem;">
+      @if (recherche.value.length > 2 || selectedCategories.length > 0 || selectedStatus !== 'all') {
+        Résultats trouvés ({{ livres.length }})
+      } @else {
+        Tous les livres
+      }
+    </h2>
+  </div>
+  <app-liste-livres [livres]="livres"></app-liste-livres>
+
+
+
+</div>

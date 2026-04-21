@@ -49,11 +49,16 @@ export class AuthService {
 
   // 🔍 CHECK LOGIN
   isLoggedIn(): boolean {
-    if (isPlatformBrowser(this.platformId)) {
-      return !!localStorage.getItem('token_session');
-    }
-    return false; // Côté serveur, on fait comme si on n'était pas connecté
+  const token = localStorage.getItem('token_session');
+  if (!token) return false;
+ 
+  try {
+    const decoded: any = jwtDecode(token);
+    return decoded.exp * 1000 > Date.now();
+  } catch {
+    return false;
   }
+}
 
   // 🚪 LOGOUT
   logout() {

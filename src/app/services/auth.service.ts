@@ -1,7 +1,7 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap,BehaviorSubject} from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
@@ -9,21 +9,51 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
   private API_URL = 'http://localhost:8080/api/auth';
-  
+
   // On injecte HttpClient et l'ID de la plateforme
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
-  
 
-  // Informations USER
+  private currentUserSubject = new BehaviorSubject<any>(null);
+
+  getCurrentUser$ = this.currentUserSubject.asObservable();
+
+  setCurrentUser(user: any) {
+    this.currentUserSubject.next(user);
+  }
+
+  setUser(user: any) {
+    this.currentUserSubject.next(user);
+  }
+
+  getUser() {
+    return this.currentUserSubject.value;
+  }
+
+
   getCurrentUser() {
-  const token = localStorage.getItem('token_session');
-  return this.http.get('http://localhost:8080/api/auth/me', {
-    headers: {
-      Authorization: `Bearer ${token}`
+    const token = localStorage.getItem('token_session');
+
+    if (!token) {
+      throw new Error("Token introuvable ❌");
     }
-  });
-}
+
+    return this.http.get('http://localhost:8080/api/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+//updateUser
+  updateCurrentUser(user: any) {
+    const token = localStorage.getItem('token_session');
+
+    return this.http.put('http://localhost:8080/api/user/me', user, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
 
   // 🔐 LOGIN
   login(data: { email: string; password: string }): Observable<any> {
@@ -49,10 +79,15 @@ export class AuthService {
 
   // 🔍 CHECK LOGIN
   isLoggedIn(): boolean {
-    if (isPlatformBrowser(this.platformId)) {
-      return !!localStorage.getItem('token_session');
+    const token = localStorage.getItem('token_session');
+    if (!token) return false;
+
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.exp * 1000 > Date.now();
+    } catch {
+      return false;
     }
-    return false; // Côté serveur, on fait comme si on n'était pas connecté
   }
 
   // 🚪 LOGOUT

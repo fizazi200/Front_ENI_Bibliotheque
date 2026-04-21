@@ -1,5 +1,5 @@
 //import { Component } from '@angular/core';
-import { Component, inject } from '@angular/core'; 
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
@@ -25,15 +25,9 @@ ngOnInit() {
   console.log(this.user);
 }
 */
-ngOnInit(): void {
-    this.authService.getCurrentUser().subscribe({
-      next: (res) => {
-        this.user = res;
-        console.log("USER CONNECTED:", res);
-      },
-      error: (err) => {
-        console.error("Erreur user:", err);
-      }
+  ngOnInit() {
+    this.authService.getCurrentUser$.subscribe((user: any) => {
+      this.user = user;
     });
   }
 

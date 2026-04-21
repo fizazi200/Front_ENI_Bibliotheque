@@ -53,7 +53,7 @@
                placeholder="Nom"
                formControlName="nom">
 
-        <small *ngIf="authForm.get('nom')?.errors?.['required']">
+        <small *ngIf="authForm.get('nom')?.touched && authForm.get('nom')?.errors?.['required']">
           Nom obligatoire
         </small>
 
@@ -68,7 +68,7 @@
                placeholder="Prénom"
                formControlName="prenom">
 
-        <small *ngIf="authForm.get('prenom')?.errors?.['required']">
+        <small *ngIf="authForm.get('prenom')?.touched && authForm.get('prenom')?.errors?.['required']">
           Prénom obligatoire
         </small>
 

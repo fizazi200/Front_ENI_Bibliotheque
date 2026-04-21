@@ -1,0 +1,42 @@
+<div class="auth-container" >
+
+  <div class="auth-box">
+
+    <h2>👤 Mon Profil</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" >
+
+      <!-- NOM -->
+      <div class="form-group">
+        <label>Nom:</label>
+        <input class="form-control"
+               placeholder="Nom"
+               formControlName="nom">
+      </div>
+
+      <!-- PRENOM -->
+      <div class="form-group">
+        <label>Prénom:</label>
+        <input class="form-control"
+               placeholder="Prénom"
+               formControlName="prenom">
+      </div>
+
+      <!-- EMAIL -->
+      <div class="form-group">
+        <label>Adresse mail:</label>
+        <input class="form-control"
+               placeholder="Email"
+               formControlName="email">
+      </div>
+
+      <!-- BUTTON -->
+      <button type="submit">
+        Modifier
+      </button>
+
+    </form>
+
+  </div>
+
+</div>

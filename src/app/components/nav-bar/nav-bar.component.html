@@ -2,7 +2,8 @@
   <div class="logo" routerLink="/homepage">Bookhub</div>
   
   <ul class="nav-links">
-    <li><a class="logo" routerLinkActive="active">Accueil</a></li>
+    <li><a class="logo" routerLink="/homepage" routerLinkActive="active">Accueil</a></li>
+    <li><a class="logo" routerLink="/catalogue" routerLinkActive="active">Catalogue</a></li>
   </ul>
 
   <div class="user-menu">
@@ -10,7 +11,7 @@
       @if (user) {
       <div class="user">
         <span class="user-icon">👤</span>
-            Bonjour {{ user.nom }}{{ user.prenom }}
+            Bonjour {{ user.nom }} {{ user.prenom }}
         </div>
       }
            
@@ -18,7 +19,7 @@
     <div class="dropdown-content">
       <a routerLink="/profile">Mon Profil</a>
       <hr>
-      <a (click)="logout()" class="logout-link">Déconnexion</a>
+      <a (click)="logout()" class="logout-link" style="cursor: pointer;">Déconnexion</a>
     </div>
   </div>
 </nav>

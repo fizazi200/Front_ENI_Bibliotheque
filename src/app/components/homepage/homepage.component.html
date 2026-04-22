@@ -10,13 +10,17 @@
 
   <section class="search-section">
     <div class="filter-wrapper">
+      <!-- 🔎 BARRE DE RECHERCHE (AJOUTÉE ICI) -->
       <div class="search-bar">
-        <input type="text"
-               #rechercheHome
-               placeholder="Connaissez-vous déjà votre prochain livre ? (Titre, auteur, ISBN...)"
-               (keyup.enter)="allerAuCatalogue(rechercheHome.value)">
-
-        <button class="btn-search" (click)="allerAuCatalogue(rechercheHome.value)">🔍</button>
+        <input
+          type="text"
+          [(ngModel)]="keyword"
+          (input)="onSearch()"
+          placeholder="Rechercher un livre (titre, auteur, ISBN...)"
+        />
+        <button (click)="onSearch()">
+          🔍 Rechercher
+        </button>
       </div>
     </div>
   </section>
@@ -32,9 +36,9 @@
       <div class="book-card">
         <div class="book-image">
           @if (livre.coverUrl) {
-            <img [src]="livre.coverUrl" [alt]="livre.title" (error)="livre.coverUrl = 'http://localhost:8080/uploads/1303.jpg'">
+            <img [src]="'http://localhost:8080/uploads/' + livre.coverUrl">
           } @else {
-            <div class="placeholder-img">📚<br>Image</div>
+            <div class="placeholder-img">📚<br>Image</div>s
           }
         </div>
 

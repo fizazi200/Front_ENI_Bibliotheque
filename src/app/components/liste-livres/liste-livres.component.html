@@ -3,10 +3,10 @@
     <div class="book-card">
       <div class="book-image">
         @if (livre.coverUrl) {
-          <img [src]="livre.coverUrl" [alt]="livre.title"
-               (error)="livre.coverUrl = 'assets/images/default-book.png'">
+          <img [src]="'http://localhost:8080/uploads/' + livre.coverUrl">
         } @else {
-          <div class="placeholder-img">📚<br>Image</div>
+          <div class="placeholder-img">📚
+            Image</div>
         }
       </div>
 
@@ -34,3 +34,4 @@
     </div>
   }
 </section>
+

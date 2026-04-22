@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import {AuthService} from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -15,24 +15,22 @@ import { ToastrService } from 'ngx-toastr';
 export class LoginComponent {
 
   isLoginMode = signal(true);
-
   authForm: FormGroup;
 
-  constructor(private fb: FormBuilder,  private router: Router, private authService: AuthService, private toastr: ToastrService) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private toastr: ToastrService
+  ) {
 
     this.authForm = this.fb.group({
-
-      email: ['', [
-        Validators.required,
-        Validators.email
-      ]],
-
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [
         Validators.required,
         Validators.minLength(8),
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)
       ]],
-
       nom: [''],
       prenom: ['']
     });
@@ -45,37 +43,21 @@ export class LoginComponent {
   }
 
   private updateValidators() {
-
     const isLogin = this.isLoginMode();
 
     const nom = this.authForm.get('nom');
     const prenom = this.authForm.get('prenom');
 
     if (!isLogin) {
-
-      nom?.setValidators([
-        Validators.required,
-        Validators.minLength(2),
-        Validators.pattern(/^[A-Za-zÀ-ÿ\s-]+$/)
-      ]);
-
-      prenom?.setValidators([
-        Validators.required,
-        Validators.minLength(2),
-        Validators.pattern(/^[A-Za-zÀ-ÿ\s-]+$/)
-      ]);
-
+      nom?.setValidators([Validators.required]);
+      prenom?.setValidators([Validators.required]);
       nom?.enable();
       prenom?.enable();
-
     } else {
-
       nom?.clearValidators();
       prenom?.clearValidators();
-
       nom?.setValue('');
       prenom?.setValue('');
-
       nom?.disable();
       prenom?.disable();
     }
@@ -84,30 +66,36 @@ export class LoginComponent {
     prenom?.updateValueAndValidity();
   }
 
+  // 🔥 CORRECTION ICI
   onSubmit() {
 
     if (this.authForm.invalid) return;
 
+    const loginData = {
+      email: this.authForm.value.email,
+      password: this.authForm.value.password
+    };
 
-      const loginData = {
-        email: this.authForm.value.email,
-        password: this.authForm.value.password
-      };
+    this.authService.login(loginData).subscribe({
+      next: () => {
 
-      this.authService.login(loginData).subscribe({
-        next: (res) => {
-          console.log("SUCCESS:", res);
-          this.toastr.success(res.message || "Connexion réussie ✅");
-          this.router.navigate(['/homepage']);
-        },
-        error: (err) => {
-          console.error("Erreur login", err);
-        }
-      });
+        // 🔥 récupérer le user après login
+        this.authService.getCurrentUser().subscribe({
+          next: (user) => {
+            this.authService.setCurrentUser(user); // ✅ IMPORTANT
 
-      console.log("LOGIN :", loginData);
+            this.toastr.success("Connexion réussie ✅");
+            this.router.navigate(['/homepage']);
+          },
+          error: (err) => {
+            console.error("Erreur récupération user", err);
+          }
+        });
 
-
-    // 👉 appel backend Spring Boot ici
+      },
+      error: (err) => {
+        console.error("Erreur login", err);
+      }
+    });
   }
 }

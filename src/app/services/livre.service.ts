@@ -9,10 +9,14 @@ import { Livre } from '../models/livre';
 export class LivreService {
   private http = inject(HttpClient);
   private readonly API_URL = 'http://localhost:8080/api/books';
+  keyword: string = '';
+  livres: any[] = [];
 
   // Récupérer tous les livres
-  getLivres(): Observable<any> {
-    return this.http.get<any>('http://localhost:8080/api/books');
+  getLivres() {
+    return this.http.get<any>(
+      `http://localhost:8080/api/books`
+    );
   }
 
   // 1. Récupérer un livre spécifique par son ISBN
@@ -22,8 +26,14 @@ export class LivreService {
 
   // 2. Recherche par mot-clé (titre ou auteur)
   // Utilise HttpParams pour construire proprement l'URL : ?keyword=monMotCle
-  searchLivres(keyword: string): Observable<Livre[]> {
-    const params = new HttpParams().set('keyword', keyword);
-    return this.http.get<Livre[]>(`${this.API_URL}/search`, { params });
+  searchLivres(keyword: string) {
+    return this.http.get<any>(
+      `http://localhost:8080/api/books/search?keyword=${keyword}`
+    );
+  }
+
+  searchBooks() {
+    this.http.get(`http://localhost:8080/api/books/search?keyword=${this.keyword}`)
+      .subscribe((res: any) => this.livres = res.content);
   }
 }

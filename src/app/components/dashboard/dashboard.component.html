@@ -18,18 +18,24 @@
           <table class="dash-table">
             <thead>
               <tr>
-                <th>Titre</th>
-                <th>Demande</th>
+                <th (click)="toggleSortRes('titre')" class="sortable">
+                  Titre <span class="sort-icon">⇅</span>
+                </th>
+                <th (click)="toggleSortRes('dateDemande')" class="sortable">
+                  Demande <span class="sort-icon">⇅</span>
+                </th>
                 <th>Statut</th>
               </tr>
             </thead>
             <tbody>
               @for (res of reservationsAffichees; track res.titre) {
                 <tr>
-                  <td>{{ res.titre }}</td>
+                  <td class="clickable-cell" (click)="ouvrirDetails(res)">
+                    <span class="book-title">{{ res.titre }}</span>
+                  </td>
                   <td>{{ res.dateDemande }}</td>
                   <td>
-                    <span class="status-pill" [ngClass]="res.status.toLowerCase().replace(' ', '-')">
+                    <span class="status-pill" [ngClass]="res.status.toLowerCase().split(' ').join('-')">
                       {{ res.status }}
                     </span>
                   </td>
@@ -62,17 +68,21 @@
           <table class="dash-table">
             <thead>
               <tr>
-                <th>Titre / Statut</th>
-                <th>Date limite</th>
+                <th (click)="toggleSortPrets('titre')" class="sortable">
+                  Titre/Statut <span class="sort-icon">⇅</span>
+                </th>
+                <th (click)="toggleSortPrets('dateLimite')" class="sortable">
+                  Date limite <span class="sort-icon">⇅</span>
+                </th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               @for (pret of pretsAffiches; track pret.titre) {
                 <tr>
-                  <td>
+                  <td class="clickable-cell" (click)="ouvrirDetails(pret)">
                     <div class="book-title">{{ pret.titre }}</div>
-                    <span class="status-label" [ngClass]="pret.status.toLowerCase().replace(' ', '-')">
+                    <span class="status-label" [ngClass]="pret.status.toLowerCase().split(' ').join('-')">
                       {{ pret.status }}
                     </span>
                     <div class="progress-container">
@@ -112,7 +122,6 @@
         <h2>Notifications</h2>
         @if (isLoading) {
           <div class="skeleton-loader mini"></div>
-          <div class="skeleton-loader mini"></div>
         } @else {
           <div class="alerts-container">
             @for (alerte of alertes; track alerte.message) {
@@ -131,7 +140,6 @@
         <h2>Statistiques</h2>
         @if (isLoading) {
           <div class="skeleton-loader mini"></div>
-          <div class="skeleton-loader mini"></div>
         } @else {
           <div class="stat-row">
             <span>Prêts actifs :</span>
@@ -149,14 +157,43 @@
   @if (showConfirmModal) {
     <div class="modal-overlay" (click)="annulerConfirmation()">
       <div class="modal-card" (click)="$event.stopPropagation()">
-        <div class="modal-header">⚠️ Confirmation</div>
-        <div class="modal-body">
-          Souhaitez-vous vraiment renouveler le prêt du livre :<br>
-          <strong>{{ selectedPret?.titre }}</strong> ?
+        
+        <div class="modal-header">
+          {{ modalMode === 'details' ? '📖 Détails de l\'ouvrage' : '⚠️ Confirmation' }}
         </div>
+
+        <div class="modal-body">
+          @if (modalMode === 'details') {
+            <div class="details-grid">
+              <p><strong>Titre :</strong> {{ selectedPret?.titre }}</p>
+              <p><strong>Auteur :</strong> {{ selectedPret?.auteur || 'Non renseigné' }}</p>
+              
+              <p><strong>Statut :</strong> 
+                <span class="status-pill" [ngClass]="selectedPret?.status?.toLowerCase()?.split(' ')?.join('-')">
+                  {{ selectedPret?.status }}
+                </span>
+              </p>
+
+              @if (selectedPret?.dateLimite) {
+                <p><strong>Date limite :</strong> {{ selectedPret?.dateLimite }}</p>
+                <p><strong>Progression :</strong> {{ selectedPret?.progress }}%</p>
+              } @else {
+                <p><strong>Date de demande :</strong> {{ selectedPret?.dateDemande }}</p>
+              }
+            </div>
+          } @else {
+            <p>Souhaitez-vous vraiment renouveler le prêt du livre :</p>
+            <p><strong>{{ selectedPret?.titre }}</strong> ?</p>
+          }
+        </div>
+
         <div class="modal-actions">
-          <button class="btn-cancel" (click)="annulerConfirmation()">Annuler</button>
-          <button class="btn-confirm" (click)="confirmerRenouvellement()">Confirmer</button>
+          @if (modalMode === 'details') {
+            <button class="btn-confirm" (click)="annulerConfirmation()">Fermer</button>
+          } @else {
+            <button class="btn-cancel" (click)="annulerConfirmation()">Annuler</button>
+            <button class="btn-confirm" (click)="confirmerRenouvellement()">Confirmer</button>
+          }
         </div>
       </div>
     </div>

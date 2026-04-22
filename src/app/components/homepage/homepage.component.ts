@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { LivreService } from '../../services/livre.service';
 import { Livre } from '../../models/livre';
-import {DetailsLivreModalComponent} from '../../details-livre-modal/details-livre-modal.component';
+import {DetailsLivreModalComponent} from '../details-livre-modal/details-livre-modal.component';
 
 
 

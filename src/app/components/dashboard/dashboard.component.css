@@ -1,0 +1,100 @@
+/* --- BASE & LAYOUT --- */
+.dashboard-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+.dashboard-header { text-align: center; margin-bottom: 2rem; }
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr 0.8fr; gap: 20px; }
+
+.dash-section {
+  background: #fff;
+  border: 2px solid #333;
+  padding: 20px;
+  border-radius: 8px;
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- RECHERCHE & HEADER --- */
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+.search-bar { padding: 6px 12px; border: 1px solid #333; border-radius: 20px; font-size: 0.85rem; outline: none; width: 140px; transition: 0.3s; }
+.search-bar:focus { width: 180px; border-color: #2ecc71; }
+
+/* --- NOUVEAU : STATUTS DES RÉSERVATIONS (.status-pill) --- */
+.status-pill { color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+.status-pill.en-attente { background: #f39c12; }
+.status-pill.disponible { background: #27ae60; }
+.status-pill.annulée { background: #95a5a6; }
+
+/* --- NOUVEAU : STATUTS DES PRÊTS (.status-label) --- */
+.status-label { font-size: 0.65rem; text-transform: uppercase; font-weight: 800; padding: 2px 5px; border-radius: 3px; display: inline-block; margin-bottom: 4px; }
+.status-label.en-cours { background: #e8f4fd; color: #2980b9; }
+.status-label.en-retard { background: #fdedec; color: #c0392b; }
+.status-label.rendu { background: #e9f7ef; color: #27ae60; }
+
+/* --- BARRES DE PROGRESSION --- */
+.progress-container { width: 100%; height: 4px; background: #eee; border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.progress-bar { height: 100%; background: #2ecc71; transition: width 0.5s ease-out; }
+.progress-bar.urgent { background: #e74c3c; }
+
+/* --- BOUTONS & ACTIONS --- */
+.btn-renew { background: #ebedef; border: 1px solid #333; padding: 5px 10px; border-radius: 4px; cursor: pointer; transition: 0.3s; font-size: 0.85rem;}
+.btn-renew:hover:not(:disabled):not(.confirmed) { background: #d6dbdf; }
+.btn-renew:disabled { cursor: not-allowed; opacity: 0.5; border-color: #ccc; }
+.btn-renew.confirmed { background: #27ae60; color: white; border-color: #27ae60; }
+
+/* --- FENÊTRE DE CONFIRMATION (MODAL) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.modal-card {
+  background: white;
+  border: 3px solid #333;
+  border-radius: 12px;
+  padding: 25px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 8px 8px 0px rgba(0,0,0,0.1);
+  animation: modalIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header { font-weight: 900; font-size: 1.2rem; margin-bottom: 15px; }
+.modal-body { margin-bottom: 25px; line-height: 1.5; color: #444; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+.btn-confirm { background: #333; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+.btn-cancel { background: white; border: 1px solid #333; padding: 8px 20px; border-radius: 4px; cursor: pointer; }
+
+/* --- SKELETONS, TABLES & PAGINATION --- (On garde tes bases) */
+.skeleton-table, .skeleton-loader { background: linear-gradient(90deg, #f0f0f0 25%, #e9e9e9 50%, #f0f0f0 75%); background-size: 200% 100%; animation: skeleton-pulse 1.5s infinite linear; border-radius: 4px; }
+.skeleton-table { width: 100%; height: 200px; margin-top: 15px; }
+.skeleton-loader.mini { height: 40px; margin-bottom: 10px; }
+@keyframes skeleton-pulse { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.empty-state { flex: 1; display: flex; justify-content: center; align-items: center; color: #95a5a6; font-style: italic; padding: 20px; }
+.dash-table { width: 100%; border-collapse: collapse; }
+.dash-table th { text-align: left; font-size: 0.85rem; color: #7f8c8d; border-bottom: 2px solid #333; padding: 10px 5px; }
+.dash-table td { padding: 12px 5px; border-bottom: 1px solid #eee; }
+.book-title { font-weight: 600; color: #2c3e50; }
+.warning { color: #e74c3c; font-weight: bold; }
+
+.mini-pagination { margin-top: auto; padding-top: 20px; display: flex; justify-content: center; align-items: center; gap: 15px; }
+.mini-pagination button { background: white; border: 1px solid #333; border-radius: 4px; width: 30px; height: 30px; cursor: pointer; font-weight: bold; }
+.mini-pagination button:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
+.page-count { font-family: 'Courier New', monospace; font-weight: bold; }
+
+.alert-box, .stats-box { min-height: auto; margin-bottom: 20px; }
+.alert-item { display: flex; align-items: center; gap: 10px; background: #fff9e6; padding: 10px; border-radius: 4px; border-left: 4px solid #f1c40f; }
+.stat-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+
+@media (max-width: 992px) { .dashboard-grid { grid-template-columns: 1fr; } .dash-section { min-height: auto; } }

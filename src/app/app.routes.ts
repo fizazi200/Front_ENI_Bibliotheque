@@ -5,6 +5,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { CatalogueComponent } from './components/catalogue/catalogue.component';
 import { ProfilComponent } from './components/profil/profil.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import { authGuard } from './guards/auth.guard';
 
@@ -22,6 +23,9 @@ export const routes: Routes = [
 
   // Profil
   { path: 'profil', component: ProfilComponent, canActivate: [authGuard] },
+  
+  // Dashboard
+  { path: 'dashboard', component: DashboardComponent },
 
   // Default redirect
   { path: '', redirectTo: 'login', pathMatch: 'full' },

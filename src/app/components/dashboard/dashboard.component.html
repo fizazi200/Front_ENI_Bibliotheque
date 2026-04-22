@@ -1,1 +1,157 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Mon Tableau de Bord</h1>
+  </header>
+
+  <div class="dashboard-grid">
+    
+    <section class="dash-section">
+      <div class="section-header">
+        <h2>Mes Réservations</h2>
+        <input type="text" [(ngModel)]="searchTermRes" placeholder="🔍 Filtrer..." class="search-bar">
+      </div>
+
+      @if (isLoading) {
+        <div class="skeleton-table"></div>
+      } @else {
+        @if (resFiltrees.length > 0) {
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Titre</th>
+                <th>Demande</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (res of reservationsAffichees; track res.titre) {
+                <tr>
+                  <td>{{ res.titre }}</td>
+                  <td>{{ res.dateDemande }}</td>
+                  <td>
+                    <span class="status-pill" [ngClass]="res.status.toLowerCase().replace(' ', '-')">
+                      {{ res.status }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <div class="empty-state"><p>📭 Aucune réservation trouvée.</p></div>
+        }
+      }
+
+      <div class="mini-pagination">
+        <button (click)="changerPageRes(-1)" [disabled]="pageRes === 1 || isLoading">&lt;</button>
+        <span class="page-count">{{ pageRes }} / {{ totalPagesRes }}</span>
+        <button (click)="changerPageRes(1)" [disabled]="pageRes === totalPagesRes || isLoading">&gt;</button>
+      </div>
+    </section>
+
+    <section class="dash-section">
+      <div class="section-header">
+        <h2>Mes Prêts en cours</h2>
+        <input type="text" [(ngModel)]="searchTermPrets" placeholder="🔍 Filtrer..." class="search-bar">
+      </div>
+
+      @if (isLoading) {
+        <div class="skeleton-table"></div>
+      } @else {
+        @if (pretsFiltres.length > 0) {
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Titre / Statut</th>
+                <th>Date limite</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (pret of pretsAffiches; track pret.titre) {
+                <tr>
+                  <td>
+                    <div class="book-title">{{ pret.titre }}</div>
+                    <span class="status-label" [ngClass]="pret.status.toLowerCase().replace(' ', '-')">
+                      {{ pret.status }}
+                    </span>
+                    <div class="progress-container">
+                      <div class="progress-bar" 
+                           [style.width.%]="pret.progress" 
+                           [class.urgent]="pret.urgent || pret.status === 'En retard'">
+                      </div>
+                    </div>
+                  </td>
+                  <td [class.warning]="pret.urgent || pret.status === 'En retard'">{{ pret.dateLimite }}</td>
+                  <td>
+                    <button class="btn-renew" 
+                            (click)="ouvrirConfirmation(pret)" 
+                            [disabled]="pret.status === 'Rendu'"
+                            [class.confirmed]="pret.confirm">
+                      {{ pret.confirm ? '✅' : 'Renouveler' }}
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <div class="empty-state"><p>📚 Aucun prêt correspondant.</p></div>
+        }
+      }
+
+      <div class="mini-pagination">
+        <button (click)="changerPagePrets(-1)" [disabled]="pagePrets === 1 || isLoading">&lt;</button>
+        <span class="page-count">{{ pagePrets }} / {{ totalPagesPrets }}</span>
+        <button (click)="changerPagePrets(1)" [disabled]="pagePrets === totalPagesPrets || isLoading">&gt;</button>
+      </div>
+    </section>
+
+    <aside class="dash-aside">
+      <div class="dash-section alert-box">
+        <h2>Mes Alertes</h2>
+        @if (isLoading) {
+          <div class="skeleton-loader mini"></div>
+        } @else {
+          <div class="alert-item">
+            <span class="icon">🔔</span>
+            <p><strong>{{ nbEnRetard }}</strong> livre(s) en retard !</p>
+          </div>
+        }
+      </div>
+
+      <div class="dash-section stats-box">
+        <h2>Statistiques</h2>
+        @if (isLoading) {
+          <div class="skeleton-loader mini"></div>
+          <div class="skeleton-loader mini"></div>
+        } @else {
+          <div class="stat-row">
+            <span>Total de prêts :</span>
+            <strong>{{ totalPrets }}</strong>
+          </div>
+          <div class="stat-row">
+            <span>Réservations :</span>
+            <strong>{{ totalReservations }}</strong>
+          </div>
+        }
+      </div>
+    </aside>
+  </div>
+
+  @if (showConfirmModal) {
+    <div class="modal-overlay" (click)="annulerConfirmation()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">⚠️ Confirmation</div>
+        <div class="modal-body">
+          Souhaitez-vous vraiment renouveler le prêt du livre :<br>
+          <strong>{{ selectedPret?.titre }}</strong> ?
+        </div>
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="annulerConfirmation()">Annuler</button>
+          <button class="btn-confirm" (click)="confirmerRenouvellement()">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

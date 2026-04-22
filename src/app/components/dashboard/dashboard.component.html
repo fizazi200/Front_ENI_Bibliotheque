@@ -51,7 +51,7 @@
 
     <section class="dash-section">
       <div class="section-header">
-        <h2>Mes Prêts en cours</h2>
+        <h2>Mes Emprunts</h2>
         <input type="text" [(ngModel)]="searchTermPrets" placeholder="🔍 Filtrer..." class="search-bar">
       </div>
 
@@ -109,13 +109,20 @@
 
     <aside class="dash-aside">
       <div class="dash-section alert-box">
-        <h2>Mes Alertes</h2>
+        <h2>Notifications</h2>
         @if (isLoading) {
           <div class="skeleton-loader mini"></div>
+          <div class="skeleton-loader mini"></div>
         } @else {
-          <div class="alert-item">
-            <span class="icon">🔔</span>
-            <p><strong>{{ nbEnRetard }}</strong> livre(s) en retard !</p>
+          <div class="alerts-container">
+            @for (alerte of alertes; track alerte.message) {
+              <div class="alert-item" [ngClass]="alerte.type">
+                <span class="icon">{{ alerte.icon }}</span>
+                <p>{{ alerte.message }}</p>
+              </div>
+            } @empty {
+              <div class="no-alerts">Tout est en ordre ! ✨</div>
+            }
           </div>
         }
       </div>
@@ -127,7 +134,7 @@
           <div class="skeleton-loader mini"></div>
         } @else {
           <div class="stat-row">
-            <span>Total de prêts :</span>
+            <span>Prêts actifs :</span>
             <strong>{{ totalPrets }}</strong>
           </div>
           <div class="stat-row">

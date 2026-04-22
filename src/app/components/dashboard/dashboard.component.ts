@@ -40,19 +40,45 @@ export class DashboardComponent implements OnInit {
   ];
 
   // --- STATISTIQUES DYNAMIQUES ---
-  get totalPrets(): number {
-    return this.prets.length;
+  get totalPrets(): number { return this.prets.length; }
+  get totalReservations(): number { return this.reservations.length; }
+  get nbEnRetard(): number { return this.prets.filter(p => p.status === 'En retard').length; }
+
+  // --- SYSTÈME DE NOTIFICATIONS DYNAMIQUE ---
+  get alertes() {
+    const notifications: any[] = [];
+
+    // 1. Alertes Retard (Rouge / Danger)
+    const enRetard = this.prets.filter(p => p.status === 'En retard');
+    enRetard.forEach(p => {
+      notifications.push({
+        type: 'danger',
+        icon: '🚨',
+        message: `Retard : "${p.titre}" (Dû le ${p.dateLimite})`
+      });
+    });
+
+    // 2. Alertes Disponibilité (Jaune / Warning)
+    const dispo = this.reservations.filter(r => r.status === 'Disponible');
+    dispo.forEach(r => {
+      notifications.push({
+        type: 'warning',
+        icon: '🔔',
+        message: `Disponible : "${r.titre}" est prêt à être récupéré !`
+      });
+    });
+
+    // 3. Infos générales (Bleu / Info)
+    notifications.push({
+      type: 'info',
+      icon: 'ℹ️',
+      message: "Pensez à renouveler vos livres avant la date limite."
+    });
+
+    return notifications;
   }
 
-  get totalReservations(): number {
-    return this.reservations.length;
-  }
-
-  get nbEnRetard(): number {
-    return this.prets.filter(p => p.status === 'En retard').length;
-  }
-
-  // Pagination settings
+  // Configuration Pagination
   readonly itemsParPage = 5;
   pageRes = 1;
   pagePrets = 1;

@@ -20,7 +20,7 @@
                     </span>
         </div>
 
-        <button class="btn-details" [routerLink]="['/livre', livre.id]">
+        <button class="btn-details" (click)="ouvrirDetails(livre)">
           Voir détails
         </button>
       </div>
@@ -28,10 +28,56 @@
   } @empty {
     <div class="no-data">
       <p>Aucun livre ne correspond à votre recherche.</p>
-      <button class="btn-explorer" style="margin-top: 1rem;" >Réinitialiser les
-        filtres
-      </button>
+      <button class="btn-explorer" style="margin-top: 1rem;" (click)="reinitFiltres()">Réinitialiser les
+        filtres</button>
     </div>
   }
 </section>
+@if (selectedLivre) {
+  <div class="modal-overlay" (click)="fermerDetails()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+      <button class="btn-close" (click)="fermerDetails()">×</button>
+
+      <div class="modal-layout">
+        <div class="modal-aside">
+
+          <img [src]="'http://localhost:8080/uploads/' + selectedLivre.coverUrl" [alt]="selectedLivre.title"
+               (error)="selectedLivre.coverUrl = 'assets/images/default-book.png'">
+
+          <div class="modal-status-badge" [class.available]="selectedLivre.availableCopies > 0">
+            {{ selectedLivre.availableCopies > 0 ? 'En stock' : 'Épuisé' }}
+          </div>
+        </div>
+
+        <div class="modal-main">
+          <div class="modal-header">
+            <span class="tag-category">{{ selectedLivre.category || 'Général' }}</span>
+            <h2>{{ selectedLivre.title }}</h2>
+            <p class="modal-author">Un ouvrage de <strong>{{ selectedLivre.author }}</strong></p>
+          </div>
+
+          <div class="modal-rating">
+            <span class="stars">{{ genererEtoiles(selectedLivre.avgRating) }}</span>
+            <span class="rating-value">{{ selectedLivre.avgRating }}/5</span>
+          </div>
+
+          <div class="modal-description">
+            <h3>Synopsis</h3>
+            <p>{{ selectedLivre.description || 'Aucun synopsis disponible pour cet ouvrage.' }}</p>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-action-emprunter" [disabled]="selectedLivre.availableCopies === 0">
+              Emprunter
+            </button>
+            <button class="btn-action-reserver">
+              Réserver
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
 

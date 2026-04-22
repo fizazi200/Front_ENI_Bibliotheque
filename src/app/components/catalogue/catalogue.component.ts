@@ -24,13 +24,16 @@ export class CatalogueComponent implements OnInit {
   selectedStatus: string = 'all';
   currentKeyword: string = '';
 
+
   categoriesDisponibles: string[] = [
     'Science-Fiction',
     'Dystopie',
     'Conte',
     'Fantastique',
     'Horreur',
-    'Thriller'
+    'Thriller',
+    'Non-fiction',
+    'Historique'
   ];
 
   ngOnInit(): void {
@@ -123,4 +126,6 @@ export class CatalogueComponent implements OnInit {
 
     this.livres = result;
   }
+
+
 }

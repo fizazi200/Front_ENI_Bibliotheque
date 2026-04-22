@@ -7,7 +7,7 @@ import { CatalogueComponent } from './components/catalogue/catalogue.component';
 import { ProfilComponent } from './components/profil/profil.component';
 
 import { authGuard } from './guards/auth.guard';
-import {DetailLivreComponent} from './detail-livre/detail-livre.component';
+
 
 export const routes: Routes = [
   // Page d'accueil
@@ -27,7 +27,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   // Wildcard
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'login' }
 
-  { path:'detail/:id' , component:DetailLivreComponent, canActivate: [authGuard]}
+
 ];

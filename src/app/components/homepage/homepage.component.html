@@ -52,7 +52,7 @@
             </span>
           </div>
 
-          <button class="btn-details" [routerLink]="['/livre', livre.id]">
+          <button class="btn-details" (click)="openDetail(livre)">
             Voir détails
           </button>
         </div>

@@ -36,7 +36,7 @@
       <div class="book-card">
         <div class="book-image">
           @if (livre.coverUrl) {
-            <img [src]="'http://localhost:8080/uploads/' + livre.coverUrl">
+            <img [src]="'http://localhost:8080/' + livre.coverUrl">
           } @else {
             <div class="placeholder-img">📚<br>Image</div>s
           }
@@ -52,7 +52,7 @@
             </span>
           </div>
 
-          <button class="btn-details" [routerLink]="['/livre', livre.id]">
+          <button class="btn-details" (click)="this.selectedLivre=livre">
             Voir détails
           </button>
         </div>
@@ -63,5 +63,7 @@
       </div>
     }
   </section>
-
+  @if (selectedLivre) {
+   <app-details-livre-modal [selectedLivre]="selectedLivre" (closeModal)="fermerDetails()"></app-details-livre-modal>
+  }
 </div>

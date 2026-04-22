@@ -2,11 +2,12 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Livre } from '../../models/livre';
+import {DetailsLivreModalComponent} from '../../details-livre-modal/details-livre-modal.component';
 
 @Component({
   selector: 'app-liste-livres',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DetailsLivreModalComponent],
   templateUrl: './liste-livres.component.html',
   styleUrl: './liste-livres.component.css'
 })
@@ -31,12 +32,10 @@ export class ListeLivresComponent {
     document.body.style.overflow = 'hidden';
   }
 
-  // ❌ fermer modal
   fermerDetails(): void {
     this.selectedLivre = null;
     document.body.style.overflow = 'auto';
   }
-
   genererEtoiles(note: number): string {
     const fullStar = '⭐';
     return fullStar.repeat(Math.floor(note || 0));

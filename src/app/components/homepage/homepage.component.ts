@@ -5,13 +5,14 @@ import { FormsModule } from '@angular/forms';
 
 import { LivreService } from '../../services/livre.service';
 import { Livre } from '../../models/livre';
+import {DetailsLivreModalComponent} from '../../details-livre-modal/details-livre-modal.component';
 
 
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, DetailsLivreModalComponent],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })
@@ -35,7 +36,10 @@ export class HomepageComponent implements OnInit {
       error: (err) => console.error(err)
     });
   }
-
+  fermerDetails(): void {
+    this.selectedLivre = null;
+    document.body.style.overflow = 'auto';
+  }
   // 🔎 recherche
   searchBooks(): void {
     this.livreService.searchLivres(this.keyword).subscribe({

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {ReservationService} from '../../services/reservation.service';
+import {LoanService} from '../../services/loan.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,10 +16,35 @@ export class DashboardComponent implements OnInit {
   isLoading: boolean = true;
   searchTermPrets: string = '';
   searchTermRes: string = '';
-  constructor(private reservationService: ReservationService) {}
+  private prets: any[] = [];
+  constructor(private reservationService: ReservationService, private loanService   :LoanService) {
+
+  }
 
   loading = false;
   //Charger depuis API
+  loadLoans(){
+    this.loanService.getMyLoans().subscribe({
+      next: (data) => {
+
+        // 🔥 mapping backend → UI
+        this.prets = data.map((r: { id: any; dueDate:string,status:string,bookTitle: string; author: string; coverUrl: string; loanDate: any; }) => ({
+          id: r.id,
+          titre: r.bookTitle,
+          auteur: r.author,
+          dateLimite: r.dueDate,
+          status: this.getStatusLabel(r.status),
+        }));
+
+        this.loading = false;
+      },
+
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
+    });
+  }
   loadReservations() {
     this.loading = true;
 
@@ -44,6 +70,18 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+  getStatusLabel(status: string): string {
+
+
+    if (!status) return '';
+
+    switch (status) {
+      case 'ACTIVE': return 'En cours';
+      case 'RETURNED': return 'Rendu';
+      case 'OVERDUE': return 'En retard';
+      default: return status;
+    }
+  }
   mapStatus(status: string): string {
     switch (status) {
 
@@ -62,20 +100,6 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  prets: any[] = [
-    { titre: 'SQL Guide', dateLimite: '21/04/2026', status: 'En retard', urgent: true, progress: 100, auteur: 'Joe Celko' },
-    { titre: 'Angular Pro', dateLimite: '15/06/2026', status: 'En cours', urgent: false, progress: 30, auteur: 'Adam Freeman' },
-    { titre: 'Clean Code', dateLimite: '24/04/2026', status: 'En cours', urgent: true, progress: 95, auteur: 'Robert C. Martin' },
-    { titre: 'Git Master', dateLimite: '10/04/2026', status: 'Rendu', urgent: false, progress: 100, auteur: 'Scott Chacon' },
-    { titre: 'Algorithmique Avancée', dateLimite: '30/05/2026', status: 'En cours', urgent: false, progress: 40, auteur: 'T. Cormen' },
-    { titre: 'The Pragmatic Programmer', dateLimite: '25/04/2026', status: 'En cours', urgent: true, progress: 90, auteur: 'Andrew Hunt' },
-    { titre: 'Node.js Expert', dateLimite: '28/04/2026', status: 'En cours', urgent: true, progress: 85, auteur: 'David Mark' },
-    { titre: 'Maîtriser GitHub', dateLimite: '05/05/2026', status: 'En cours', urgent: false, progress: 60, auteur: 'Ben Straub' },
-    { titre: 'Cybersécurité', dateLimite: '28/04/2026', status: 'En cours', urgent: true, progress: 88, auteur: 'Bruce Schneier' },
-    { titre: 'TypeScript Handbook', dateLimite: '20/06/2026', status: 'En cours', urgent: false, progress: 15, auteur: 'Anders Hejlsberg' },
-    { titre: 'React Native Expert', dateLimite: '14/05/2026', status: 'En cours', urgent: false, progress: 45, auteur: 'Mauricio Fortunato' },
-    { titre: 'Microservices', dateLimite: '02/05/2026', status: 'En cours', urgent: true, progress: 92, auteur: 'Sam Newman' }
-  ];
 
   // --- ÉTATS DE TRI ---
   sortColRes: string | null = null;
@@ -115,6 +139,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     setTimeout(() => { this.isLoading = false; }, 1500);
     this.loadReservations();
+    this.loadLoans();
   }
 
   // --- LOGIQUE DE TRI ---

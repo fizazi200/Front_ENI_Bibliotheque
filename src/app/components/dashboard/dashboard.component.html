@@ -4,7 +4,7 @@
   </header>
 
   <div class="dashboard-grid">
-    
+
     <section class="dash-section">
       <div class="section-header">
         <h2>Mes Réservations</h2>
@@ -86,16 +86,16 @@
                       {{ pret.status }}
                     </span>
                     <div class="progress-container">
-                      <div class="progress-bar" 
-                           [style.width.%]="pret.progress" 
+                      <div class="progress-bar"
+                           [style.width.%]="pret.progress"
                            [class.urgent]="pret.urgent || pret.status === 'En retard'">
                       </div>
                     </div>
                   </td>
                   <td [class.warning]="pret.urgent || pret.status === 'En retard'">{{ pret.dateLimite }}</td>
                   <td>
-                    <button class="btn-renew" 
-                            (click)="ouvrirConfirmation(pret)" 
+                    <button class="btn-renew"
+                            (click)="ouvrirConfirmation(pret)"
                             [disabled]="pret.status === 'Rendu'"
                             [class.confirmed]="pret.confirm">
                       {{ pret.confirm ? '✅' : 'Renouveler' }}
@@ -157,7 +157,7 @@
   @if (showConfirmModal) {
     <div class="modal-overlay" (click)="annulerConfirmation()">
       <div class="modal-card" (click)="$event.stopPropagation()">
-        
+
         <div class="modal-header">
           {{ modalMode === 'details' ? '📖 Détails de l\'ouvrage' : '⚠️ Confirmation' }}
         </div>
@@ -167,8 +167,8 @@
             <div class="details-grid">
               <p><strong>Titre :</strong> {{ selectedPret?.titre }}</p>
               <p><strong>Auteur :</strong> {{ selectedPret?.auteur || 'Non renseigné' }}</p>
-              
-              <p><strong>Statut :</strong> 
+
+              <p><strong>Statut :</strong>
                 <span class="status-pill" [ngClass]="selectedPret?.status?.toLowerCase()?.split(' ')?.join('-')">
                   {{ selectedPret?.status }}
                 </span>

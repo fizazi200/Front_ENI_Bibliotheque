@@ -75,7 +75,7 @@ reserve(bookId: number) {
 
   const token = localStorage.getItem('token_session');
   console.log("TOKEN =>", token);
-
+  //this.reservationService.getMyReservations().subscribe();
   this.reservationService.reserveBook(bookId).subscribe({
     next: (res: any) => {
 

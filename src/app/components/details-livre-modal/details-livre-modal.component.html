@@ -6,7 +6,7 @@
     <div class="modal-layout">
       <div class="modal-aside">
 
-        <img [src]="'http://localhost:8080/' + selectedLivre.coverUrl" [alt]="selectedLivre.title"
+        <img [src]="'http://localhost:8080/uploads/' + selectedLivre.coverUrl" [alt]="selectedLivre.title"
              (error)="selectedLivre.coverUrl = 'assets/images/default-book.png'">
 
         <div class="modal-status-badge" [class.available]="selectedLivre.availableCopies > 0">
@@ -32,7 +32,8 @@
         </div>
 
         <div class="modal-actions">
-          <button class="btn-action-emprunter" [disabled]="selectedLivre.availableCopies === 0">
+          <button class="btn-action-emprunter" [disabled]="selectedLivre.availableCopies === 0"
+                  (click)="borrow(selectedLivre.id)">
             Emprunter
           </button>
           <button class="btn-action-reserver">

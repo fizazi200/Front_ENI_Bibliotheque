@@ -8,6 +8,7 @@ import { ProfilComponent } from './components/profil/profil.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import { authGuard } from './guards/auth.guard';
+import { guestGuard } from './guards/guest.guard';
 
 
 export const routes: Routes = [
@@ -18,14 +19,14 @@ export const routes: Routes = [
   { path: 'catalogue', component: CatalogueComponent, canActivate: [authGuard] },
 
   // Auth
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
 
   // Profil
   { path: 'profil', component: ProfilComponent, canActivate: [authGuard] },
   
   // Dashboard
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
 
   // Default redirect
   { path: '', redirectTo: 'login', pathMatch: 'full' },

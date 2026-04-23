@@ -49,13 +49,13 @@ export class AuthService {
 
   // 👤 GET CURRENT USER
   getCurrentUser() {
-    const token = localStorage.getItem('token_session');
+    const token = this.getToken();
 
     if (!token) {
       throw new Error("Token introuvable ❌");
     }
 
-    return this.http.get('http://localhost:8080/api/auth/me', {
+    return this.http.get(`${this.API_URL}/me`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -64,7 +64,7 @@ export class AuthService {
 
   // ✏️ UPDATE USER
   updateCurrentUser(user: any) {
-    const token = localStorage.getItem('token_session');
+    const token = this.getToken();
 
     return this.http.put('http://localhost:8080/api/user/me', user, {
       headers: {
@@ -73,7 +73,18 @@ export class AuthService {
     });
   }
 
-  // 🔍 CHECK LOGIN
+  /**
+   * 🛡️ Utilisé par GuestGuard
+   * Retourne true si l'utilisateur est authentifié (token présent et valide)
+   */
+  isAuthenticated(): boolean {
+    return this.isLoggedIn();
+  }
+
+  /**
+   * 🔍 Utilisé par AuthGuard
+   * Vérifie la validité du token JWT
+   */
   isLoggedIn(): boolean {
     const token = this.getToken();
     if (!token) return false;
@@ -90,6 +101,7 @@ export class AuthService {
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token_session');
+      this.currentUserSubject.next(null);
     }
   }
 
@@ -101,10 +113,7 @@ export class AuthService {
     return null;
   }
 
-
   setUser(user: any) {
     this.currentUserSubject.next(user);
   }
-
-
 }

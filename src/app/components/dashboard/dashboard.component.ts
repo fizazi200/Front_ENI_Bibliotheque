@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {ReservationService} from '../../services/reservation.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,19 +11,56 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
-  
+  reservations: any[] = [];
   isLoading: boolean = true;
   searchTermPrets: string = '';
   searchTermRes: string = '';
+  constructor(private reservationService: ReservationService) {}
 
-  reservations = [
-    { titre: 'UML 2.5', dateDemande: '07/05/2026', status: 'En attente', auteur: 'Pascal Roques' },
-    { titre: 'Design Patterns', dateDemande: '10/05/2026', status: 'Disponible', auteur: 'Erich Gamma' },
-    { titre: 'Clean Code', dateDemande: '12/05/2026', status: 'Annulée', auteur: 'Robert C. Martin' },
-    { titre: 'Refactoring', dateDemande: '14/05/2026', status: 'En attente', auteur: 'Martin Fowler' },
-    { titre: 'Docker pour les nuls', dateDemande: '15/05/2026', status: 'En attente', auteur: 'J.G. Fischer' },
-    { titre: 'Kubernetes 101', dateDemande: '16/05/2026', status: 'En attente', auteur: 'Nigel Poulton' }
-  ];
+  loading = false;
+  //Charger depuis API
+  loadReservations() {
+    this.loading = true;
+
+    this.reservationService.getMyReservations().subscribe({
+      next: (data) => {
+
+        // 🔥 mapping backend → UI
+        this.reservations = data.map((r: { id: any; book: { title: any; author: any; }; reservationDate: any; status: string; rankInLine: any; }) => ({
+          id: r.id,
+          titre: r.book?.title,
+          auteur: r.book?.author,
+          dateDemande: r.reservationDate,
+          status: this.mapStatus(r.status),
+          rank: r.rankInLine
+        }));
+
+        this.loading = false;
+      },
+
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
+    });
+  }
+  mapStatus(status: string): string {
+    switch (status) {
+
+      case 'PENDING':
+        return 'En attente';
+
+      case 'AVAILABLE':
+        return 'Disponible';
+
+      case 'CANCELED':
+        return 'Annulée';
+
+      default:
+        return status;
+    }
+  }
+
 
   prets: any[] = [
     { titre: 'SQL Guide', dateLimite: '21/04/2026', status: 'En retard', urgent: true, progress: 100, auteur: 'Joe Celko' },
@@ -76,6 +114,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => { this.isLoading = false; }, 1500);
+    this.loadReservations();
   }
 
   // --- LOGIQUE DE TRI ---
@@ -125,7 +164,7 @@ export class DashboardComponent implements OnInit {
   // --- PAGINATION ---
   get totalPagesRes() { return Math.ceil(this.resFiltrees.length / this.itemsParPage) || 1; }
   get reservationsAffichees() { return this.resFiltrees.slice((this.pageRes - 1) * this.itemsParPage, this.pageRes * this.itemsParPage); }
-  
+
   get totalPagesPrets() { return Math.ceil(this.pretsFiltres.length / this.itemsParPage) || 1; }
   get pretsAffiches() { return this.pretsFiltres.slice((this.pagePrets - 1) * this.itemsParPage, this.pagePrets * this.itemsParPage); }
 
@@ -145,9 +184,9 @@ export class DashboardComponent implements OnInit {
     this.showConfirmModal = true;
   }
 
-  annulerConfirmation() { 
-    this.showConfirmModal = false; 
-    this.selectedPret = null; 
+  annulerConfirmation() {
+    this.showConfirmModal = false;
+    this.selectedPret = null;
   }
 
   confirmerRenouvellement() {

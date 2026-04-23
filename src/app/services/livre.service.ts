@@ -14,26 +14,36 @@ export class LivreService {
 
   // Récupérer tous les livres
   getLivres() {
+    return this.get(`http://localhost:8080/api/books`);
+  }
+
+  get(url:string) {
+    const token=localStorage.getItem('token_session');
     return this.http.get<any>(
-      `http://localhost:8080/api/books`
+      url,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
     );
   }
 
   // 1. Récupérer un livre spécifique par son ISBN
   getLivreByIsbn(isbn: string): Observable<Livre> {
-    return this.http.get<Livre>(`${this.API_URL}/isbn/${isbn}`);
+    return this.get(`${this.API_URL}/isbn/${isbn}`);
   }
 
   // 2. Recherche par mot-clé (titre ou auteur)
   // Utilise HttpParams pour construire proprement l'URL : ?keyword=monMotCle
   searchLivres(keyword: string) {
-    return this.http.get<any>(
+    return this.get(
       `http://localhost:8080/api/books/search?keyword=${keyword}`
     );
   }
 
   searchBooks() {
-    this.http.get(`http://localhost:8080/api/books/search?keyword=${this.keyword}`)
+    this.get(`http://localhost:8080/api/books/search?keyword=${this.keyword}`)
       .subscribe((res: any) => this.livres = res.content);
   }
 }

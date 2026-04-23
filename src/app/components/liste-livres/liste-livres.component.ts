@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Livre } from '../../models/livre';
-import {DetailsLivreModalComponent} from '../../details-livre-modal/details-livre-modal.component';
+import {DetailsLivreModalComponent} from '../details-livre-modal/details-livre-modal.component';
 
 @Component({
   selector: 'app-liste-livres',

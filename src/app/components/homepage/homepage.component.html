@@ -36,7 +36,7 @@
       <div class="book-card">
         <div class="book-image">
           @if (livre.coverUrl) {
-            <img [src]="'http://localhost:8080/' + livre.coverUrl">
+            <img [src]="'http://localhost:8080/uploads/' + livre.coverUrl">
           } @else {
             <div class="placeholder-img">📚<br>Image</div>s
           }

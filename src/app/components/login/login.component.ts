@@ -66,7 +66,6 @@ export class LoginComponent {
     prenom?.updateValueAndValidity();
   }
 
-  // 🔥 CORRECTION ICI
   onSubmit() {
 
     if (this.authForm.invalid) return;
@@ -79,23 +78,30 @@ export class LoginComponent {
     this.authService.login(loginData).subscribe({
       next: () => {
 
-        // 🔥 récupérer le user après login
         this.authService.getCurrentUser().subscribe({
           next: (user) => {
-            this.authService.setCurrentUser(user); // ✅ IMPORTANT
-
+            this.authService.setCurrentUser(user);
             this.toastr.success("Connexion réussie ✅");
             this.router.navigate(['/homepage']);
           },
-          error: (err) => {
-            console.error("Erreur récupération user", err);
+          error: () => {
+            this.toastr.error("Erreur récupération utilisateur");
           }
         });
 
       },
+
       error: (err) => {
-        console.error("Erreur login", err);
+
+        console.log(err); // debug
+
+        // 🔥 récupération du message backend
+        const message =
+          err.error ||
+          err.error ||
+          "Erreur lors de la connexion";
+
+        this.toastr.error(message);
       }
     });
-  }
-}
+  }}

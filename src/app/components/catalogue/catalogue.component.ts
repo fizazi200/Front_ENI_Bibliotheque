@@ -17,13 +17,12 @@ export class CatalogueComponent implements OnInit {
   private livreService = inject(LivreService);
   private route = inject(ActivatedRoute);
 
-  livres: Livre[] = [];        // 🔥 affichage
+  livres: Livre[] = [];         // 🔥 affichage
   allLivres: Livre[] = [];     // 🔥 source brute
 
   selectedCategories: string[] = [];
   selectedStatus: string = 'all';
   currentKeyword: string = '';
-
 
   categoriesDisponibles: string[] = [
     'Science-Fiction',
@@ -50,10 +49,8 @@ export class CatalogueComponent implements OnInit {
   loadBooks(): void {
     this.livreService.getLivres().subscribe({
       next: (data: any) => {
-
         // ⚠️ backend pageable => content
-        this.allLivres = data?.content || [];
-
+        this.allLivres = data?.content || data || [];
         this.applyFilters();
       },
       error: (err) => console.error('Erreur chargement livres', err)
@@ -92,15 +89,15 @@ export class CatalogueComponent implements OnInit {
     this.selectedCategories = [];
     this.selectedStatus = 'all';
 
+    // Décoche les checkboxes dans le DOM si nécessaire
     this.livres = [...this.allLivres];
   }
 
   // 🔥 FILTRAGE LOCAL
   applyFilters(): void {
-
     let result = [...this.allLivres];
 
-    // recherche
+    // 1. Recherche par mot-clé
     if (this.currentKeyword.trim()) {
       const key = this.currentKeyword.toLowerCase();
 
@@ -110,14 +107,17 @@ export class CatalogueComponent implements OnInit {
       );
     }
 
-    // categories
+    // 2. Catégories (Correction Insensibilité à la casse & Normalisation MAJUSCULES)
     if (this.selectedCategories.length > 0) {
-      result = result.filter(l =>
-        this.selectedCategories.includes(l.category ?? '')
-      );
+      const selectedUpper = this.selectedCategories.map(c => c.toUpperCase());
+      
+      result = result.filter(l => {
+        const bookCategoryUpper = (l.category ?? '').toUpperCase();
+        return selectedUpper.includes(bookCategoryUpper);
+      });
     }
 
-    // status
+    // 3. Status
     if (this.selectedStatus === 'available') {
       result = result.filter(l => l.availableCopies > 0);
     } else if (this.selectedStatus === 'unavailable') {
@@ -126,6 +126,4 @@ export class CatalogueComponent implements OnInit {
 
     this.livres = result;
   }
-
-
 }

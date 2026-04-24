@@ -57,7 +57,7 @@ export class DetailsLivreModalComponent {
         console.log("BACKEND RESPONSE => ", err.error);
 
         this.toastr.error(
-          err.error?.message || 'Erreur lors de l’emprunt',
+          err.error || 'Erreur lors de l’emprunt',
           'Erreur ❌'
         );
 

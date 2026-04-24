@@ -31,7 +31,13 @@ export class HomepageComponent implements OnInit {
   getAllBooks(): void {
     this.livreService.getLivres().subscribe({
       next: (res: any) => {
-        this.livres = res.content ?? res;
+        const allLivres = res.content ?? res;
+
+        // Mélanger le tableau (shuffle)
+        const shuffled = allLivres.sort(() => 0.5 - Math.random());
+
+        // Prendre 5 éléments
+        this.livres = shuffled.slice(0, 4);
       },
       error: (err) => console.error(err)
     });
